@@ -1,16 +1,23 @@
 ﻿// Write your Javascript code.
+var numberOfPlayers;
+
 function generatePlayerLifeView() {
+
+    document.getElementById("startButton").style.display = "unset";
+
     var playerNamesContainer = document.getElementById("playerNamesContainer");
     var playerHealthContainer = document.getElementById("playerHealthContainer");
 
     hideElements("players");
     hideElements("health");
     hideElements("okButton");
-    
+
+    numberOfPlayers = document.getElementById("players").value;
+
     for (var j = 2; j > 0; j--) {
         for (var i = 0; i < document.getElementById("players").value; i++) {
             var newElement = document.createElement("input");
-            if (j == 2) {
+            if (j === 2) {
                 newElement.setAttribute("id", j + "" + i);
                 newElement.setAttribute("class", "form-control");
                 playerNamesContainer.append(document.createElement("p"));
@@ -41,14 +48,25 @@ function calcuateLifeTotal(test, id) {
         console.log(res);
         document.getElementById(id).value = res[0] - res[1];
     }
-    
+
     if (res2.length > 1) {
         console.log(res2);
 
-        document.getElementById(id).value = parseInt(res2[0]) + parseInt(res2[1]) ;
+        document.getElementById(id).value = parseInt(res2[0]) + parseInt(res2[1]);
     }
 }
 
 function hideElements(id) {
     document.getElementById(id).style.display = "none";
+}
+
+function startPlayer() {
+    var number = 2 + "" + getRandomInt(numberOfPlayers);
+    var startingPlayer = document.getElementById(number);
+    startingPlayer.setAttribute("class", "form-control is-valid");
+    hideElements("startButton");
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
 }
