@@ -1,0 +1,9 @@
+.vs/
+[Oo]bj/
+[Bb]in/
+*.suo
+[Bb]ootstrap/
+*.pdb
+bower_components/
+node_modules/
+**/wwwroot/lib
