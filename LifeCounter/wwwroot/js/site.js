@@ -33,6 +33,14 @@ function generatePlayerLifeView() {
                         calcuateLifeTotal(e.target.value, e.target.id);
                     }
                 });
+                newElement.addEventListener("dblclick", function (e) {
+                    console.log(e.target.value, e.target.id);
+                    increaseLifeByOne(e.target.value, e.target.id);
+                });
+                $(newElement).contextmenu(makeDoubleRightClickHandler(function (e) {
+                    //console.log("double right click");
+                    document.getElementById(e.target.id).value = e.target.value - 1;
+                }));
                 playerHealthContainer.append(document.createElement("p"));
                 playerHealthContainer.append(newElement);
             }
@@ -69,4 +77,28 @@ function startPlayer() {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+function increaseLifeByOne(test, id) {
+    document.getElementById(id).value = parseInt(test) + parseInt(1);
+}
+
+function makeDoubleRightClickHandler(handler) {
+    var timeout = 0, clicked = false;
+    return function (e) {
+
+        e.preventDefault();
+
+        if (clicked) {
+            clearTimeout(timeout);
+            clicked = false;
+            return handler.apply(this, arguments);
+        }
+        else {
+            clicked = true;
+            timeout = setTimeout(function () {
+                clicked = false;
+            }, 300);
+        }
+    };
 }
