@@ -1,6 +1,34 @@
 ﻿// Write your Javascript code.
 var numberOfPlayers;
 
+function createHealthInput(id) {
+    var healthInput = document.createElement("input");
+    healthInput.setAttribute("id", "health" + id);
+    healthInput.setAttribute("class", "form-control");
+    healthInput.value = document.getElementById("health").value;
+    healthInput.addEventListener('keypress', function (e) {
+        if (e.keyCode === 13) {
+            calcuateLifeTotal(e.target.value, e.target.id);
+        }
+    });
+    healthInput.addEventListener("dblclick", function (e) {
+        console.log(e.target.value, e.target.id);    
+        increaseLifeByOne(e.target.value, e.target.id);
+    });
+    $(healthInput).contextmenu(makeDoubleRightClickHandler(function (e) {
+        console.log("double right click");
+        document.getElementById(e.target.id).value = e.target.value - 1;
+    }));
+    return healthInput;
+}
+
+function createPlayerInput(id) {
+    var playerInput = document.createElement("input");
+    playerInput.setAttribute("id", "player" + id);
+    playerInput.setAttribute("class", "form-control");
+    return playerInput;
+}
+
 function generatePlayerLifeView() {
 
     document.getElementById("startButton").style.display = "unset";
@@ -13,44 +41,19 @@ function generatePlayerLifeView() {
     hideElements("okButton");
 
     numberOfPlayers = document.getElementById("players").value;
-
-    for (var j = 2; j > 0; j--) {
-        for (var i = 0; i < document.getElementById("players").value; i++) {
-            var newElement = document.createElement("input");
-            if (j === 2) {
-                newElement.setAttribute("id", j + "" + i);
-                newElement.setAttribute("class", "form-control");
-                playerNamesContainer.append(document.createElement("p"));
-                playerNamesContainer.append(newElement);
-            }
-            else {
-                newElement.setAttribute("id", i);
-                newElement.setAttribute("class", "form-control");
-                newElement.value = document.getElementById("health").value;
-                newElement.addEventListener('keypress', function (e) {
-                    if (e.keyCode === 13) {
-                        console.log(e.target.value, e.target.id);
-                        calcuateLifeTotal(e.target.value, e.target.id);
-                    }
-                });
-                newElement.addEventListener("dblclick", function (e) {
-                    console.log(e.target.value, e.target.id);
-                    increaseLifeByOne(e.target.value, e.target.id);
-                });
-                $(newElement).contextmenu(makeDoubleRightClickHandler(function (e) {
-                    //console.log("double right click");
-                    document.getElementById(e.target.id).value = e.target.value - 1;
-                }));
-                playerHealthContainer.append(document.createElement("p"));
-                playerHealthContainer.append(newElement);
-            }
-        }
+    for (var i = 0; i < numberOfPlayers; i++) {
+        playerNamesContainer.append(document.createElement("p"));
+        playerNamesContainer.append(createPlayerInput(i));
+        playerHealthContainer.append(document.createElement("p"));
+        playerHealthContainer.append(createHealthInput(i));
     }
+
 }
 
 function calcuateLifeTotal(test, id) {
     var res = test.split("-");
     var res2 = test.split("+");
+    var res3 = test.split("/");
 
     if (res.length > 1) {
         console.log(res);
@@ -59,8 +62,16 @@ function calcuateLifeTotal(test, id) {
 
     if (res2.length > 1) {
         console.log(res2);
-
         document.getElementById(id).value = parseInt(res2[0]) + parseInt(res2[1]);
+    }
+
+    if (res3.length > 1) {
+        console.log(res3);
+        if (res3[0] % 2 === 1) {
+            document.getElementById(id).value = (parseInt(res3[0]) + 1) / parseInt(res3[1]);
+        } else {
+            document.getElementById(id).value = parseInt(res3[0]) / parseInt(res3[1]);
+        }
     }
 }
 
@@ -69,7 +80,7 @@ function hideElements(id) {
 }
 
 function startPlayer() {
-    var number = 2 + "" + getRandomInt(numberOfPlayers);
+    var number = "player" + getRandomInt(numberOfPlayers);
     var startingPlayer = document.getElementById(number);
     startingPlayer.setAttribute("class", "form-control is-valid");
     hideElements("startButton");
